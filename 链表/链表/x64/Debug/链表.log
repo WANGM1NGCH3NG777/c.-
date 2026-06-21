@@ -1,0 +1,4 @@
+﻿  test.c
+D:\桌面\C语言练习\链表\test.c(76,2): warning C4047: “return”:“Node *”与“int”的间接级别不同
+D:\桌面\C语言练习\链表\test.c(103,2): warning C4047: “return”:“Node *”与“int”的间接级别不同
+  链表.vcxproj -> D:\桌面\C语言练习\链表\x64\Debug\链表.exe

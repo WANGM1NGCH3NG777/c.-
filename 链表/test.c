@@ -1,0 +1,174 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int ElemType;
+typedef struct node {
+	ElemType data;
+	struct node* next;
+}Node;
+
+Node* initList()
+{
+	Node* head = (Node*)malloc(sizeof(Node));
+	head->data = 0;
+	head->next = NULL;
+	return head;
+}
+
+int insertHead(Node* L, ElemType e)
+{
+	Node* p = (Node*)malloc(sizeof(Node));
+	p->data = e;
+	p->next = L->next;
+	L->next = p;
+	return 1;
+}
+
+void listNode(Node* L)
+{
+	Node* p = L->next;
+	while (p != NULL)
+	{
+		printf("%d ", p->data);
+		p = p->next;
+	}
+	printf("\n");
+}
+
+Node* get_tail(Node* L)
+{
+	Node* p = L;
+	while (p->next != NULL)
+	{
+		p = p->next;
+	}
+	return p;
+}
+
+Node* insertTail(Node* tail, ElemType e)
+{
+	Node* p = (Node*)malloc(sizeof(Node));
+	p->data = e;
+	tail->next = p;
+	p->next = NULL;
+	return p;
+}
+
+Node* insertNode(Node* L, int pos, ElemType e)
+{
+	Node* p = L;
+	int i = 0;
+	while (i < pos - 1)
+	{
+		p = p->next;
+		i++;
+		if (p == NULL)
+		{
+			return 0;
+		}
+	}
+
+	Node* q = (Node*)malloc(sizeof(Node));
+	q->data = e;
+	q->next = p->next;
+	p->next = q;
+	return 1;
+	
+}
+
+Node* deleteNode(Node* L, int pos)
+{
+	Node* p = L;
+	int i = 0;
+	while (i < pos - 1)
+	{
+		p = p->next;
+		i++;
+		if (p == NULL)
+		{
+			return 0;
+		}
+	}
+
+	if (p->next == NULL)
+	{
+		printf("要删除的位置错误\n");
+		return 0;
+	}
+
+	Node* q = p->next;
+	p->next = q->next;
+	free(q);
+	return 1;
+}
+
+int listLength(Node* L)
+{
+	Node* p = L;
+	int len = 0;
+	while (p->next != NULL)
+	{
+		p = p->next;
+		len++;
+	}
+	return len;
+}
+
+void freeList(Node* L)
+{
+	Node* p = L->next;
+	Node* q;
+
+	while (p != NULL)
+	{
+		q = p->next;
+		free(p);
+		p = q;
+	}
+	L->next = NULL;
+}
+
+int findNodeFS(Node* L, int k)
+{
+	Node* fast = L->next;
+	Node* slow = L->next;
+
+	for (int i = 0; i < k; i++)
+	{
+		fast = fast->next;
+	}
+
+	while (fast != NULL)
+	{
+		fast = fast->next;
+		slow = slow->next;
+	}
+
+	printf("倒数第%d个节点值为：%d\n", k, slow->data);
+	return 1;
+}
+
+int main()
+{
+	Node* list = initList();
+	insertHead(list, 10);
+	insertHead(list, 20);
+	insertHead(list, 30);
+	listNode(list);
+	Node* tail = get_tail(list);
+	tail = insertTail(tail, 40);
+	tail = insertTail(tail, 50);
+	tail = insertTail(tail, 60);
+	listNode(list);
+	insertNode(list, 2, 15);
+	listNode(list);
+	deleteNode(list, 2);
+	listNode(list);
+	printf("链表长度：%d\n", listLength(list));
+	findNodeFS(list, 3);
+	freeList(list);
+	printf("释放后链表长度：%d\n", listLength(list));
+
+	return 0;
+}
