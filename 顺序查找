@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+int search(int* arr, int len, int i)
+{
+	int j = 0;
+	for(j = 0; j < len; j++)
+	{
+		if(arr[j] == i)
+		return j;
+	}
+	
+	return -1; 
+}
+
+int main()
+{
+	int arr[] = {78, 56, 53, 9, 2, 14, 0};
+	int len = 0;
+	int i = 0;
+	printf("需要查找数字：");
+	scanf("%d", &i);
+	len = sizeof(arr)/sizeof(arr[0]);
+	int pos = search(arr, len, i);
+	if(pos != -1)
+	{
+		printf("%d在数组中的位置是%d", i, pos);
+	}
+	else
+	{
+		printf("数字不存在");
+	}
+	return 0;
+}
