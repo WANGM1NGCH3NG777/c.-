@@ -1,0 +1,198 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int ElemType;
+typedef struct TreeNode
+{
+	ElemType data;
+	struct TreeNode* lchild;
+	struct TreeNode* rchild;
+} TreeNode;
+
+typedef TreeNode* BiTree;
+
+int treeArr[] = { 70, 55, 49, 30, -1, 39, -1, -1, 53, -1, -1, -1, 80, 75, -1, -1, 98, 95, -1, -1, -1 };
+int idx = 0;
+
+void createTree(BiTree* T)
+{
+	ElemType num;
+	num = treeArr[idx++];
+
+	if (num == -1)
+	{
+		*T = NULL;
+	}
+	else
+	{
+		*T = (BiTree)malloc(sizeof(TreeNode));
+		(*T)->data = num;
+		createTree(&(*T)->lchild);
+		createTree(&(*T)->rchild);
+	}
+}
+
+void preOrder(BiTree T)
+{
+	if (T == NULL)
+	{
+		return;
+	}
+	else
+	{
+		printf("%d ", T->data);
+		preOrder(T->lchild);
+		preOrder(T->rchild);
+	}
+}
+
+int search_bst(BiTree T, int value, BiTree parent, BiTree* pos)
+{
+	if (T == NULL)
+	{
+		*pos = parent;
+		return 0;
+	}
+
+	if (T->data == value)
+	{
+		*pos = T;
+		return 1;
+	}
+
+	if (T->data > value)
+	{
+		return search_bst(T->lchild, value, T, pos);
+	}
+
+	else
+	{
+		return search_bst(T->rchild, value, T, pos);
+	}
+}
+
+int insert_bst(BiTree* T, int value)
+{
+	BiTree parent, pos;
+	BiTree curr;
+	
+	int status = search_bst(*T, value, NULL, &pos);
+	if (status == 0)
+	{
+		curr = (BiTree)malloc(sizeof(TreeNode));
+		curr->data = value;
+		curr->lchild = NULL;
+		curr->rchild = NULL;
+
+		if (pos == NULL)
+		{
+			*T = curr;
+		}
+		else if (value < pos->data)
+		{
+			pos->lchild = curr;
+		}
+		else
+		{
+			pos->rchild = curr;
+		}
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int delete(BiTree* d)
+{
+	BiTree temp, record;
+
+	if ((*d)->rchild == NULL)
+	{
+		temp = *d;
+		*d = (*d)->lchild;
+		free(temp);
+	}
+	else if ((*d)->lchild == NULL)
+	{
+		temp = *d;
+		*d = (*d)->rchild;
+		free(temp);
+	}
+	else
+	{
+		temp = *d;
+		record = (*d)->lchild;
+		while (record->rchild != NULL)
+		{
+			temp = record;
+			record = record->rchild;
+		}
+
+		(*d)->data = record->data;
+
+
+		if (temp != *d)
+		{
+			temp->rchild = record->lchild;
+		}
+		else
+		{
+			temp->lchild = record->lchild;
+		}
+		free(record);
+	}
+	return 1;
+}
+
+int delete_bst(BiTree* T, int value)
+{
+	if (*T == NULL)
+	{
+		printf("not found!\n");
+		return 0;
+	}
+	else
+	{
+		if ((*T)->data == value)
+		{
+			return delete(T);
+		}
+		else if ((*T)->data > value)
+		{
+			return delete_bst(&(*T)->lchild, value);
+		}
+		else
+		{
+			return delete_bst(&(*T)->rchild, value);
+		}
+	}
+}
+
+int main()
+{
+	BiTree T;
+	createTree(&T);
+
+	BiTree searchT;
+	search_bst(T, 53, NULL, &searchT);
+
+	preOrder(T);
+	printf("\n");
+
+	printf("%d\n", searchT->data);
+
+	insert_bst(&T, 99);
+
+	preOrder(T);
+	printf("\n");
+
+	delete_bst(&T, 49);
+
+	preOrder(T);
+	printf("\n");
+
+	return 0;
+}
