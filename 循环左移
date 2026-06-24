@@ -1,0 +1,49 @@
+//设将 n(n > 1) 个整数存放在一维数组 R 中，
+//试着设计一个在时间复杂度和空间复杂度都尽可能高效的算法，
+//将 R 中保存的序列循环左移 p(0 < p < n) 个位置，
+//即将 R 中的数据由(x0, x1, ……, xn - 1) 变换为(xp, xp + 1, …xn - 1, x0, x1, …, xp - 1)。
+
+#include<stdio.h>
+
+void reverse(int arr[], int start, int end)
+{
+	while (start < end)
+	{
+		int temp = arr[start];
+		arr[start] = arr[end];
+		arr[end] = temp;
+		start++;
+		end--;
+	}
+}
+
+void leftRotate(int arr[], int n, int p)
+{
+	reverse(arr, 0, p - 1);
+	reverse(arr, p, n - 1);
+	reverse(arr, 0, n - 1);
+}
+
+void bianli(int arr[], int length)
+{
+	for (int i = 0; i < length; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+	printf("\n");
+}
+
+int main()
+{
+	int arr[] = { 1,2,3,4,5,6,7,8,9,0 };
+	int p = 4;
+	int length = sizeof(arr) / sizeof(arr[0]);
+
+	bianli(arr, length);
+
+	leftRotate(arr, length, p);
+
+	bianli(arr, length);
+	
+	return 0;
+}
